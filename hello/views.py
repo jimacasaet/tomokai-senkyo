@@ -5,7 +5,7 @@ from .models import Greeting
 
 # Create your views here.
 def index(request):
-    return HttpResponse('Hello from Python!')
+    return HttpResponse('Set me up.')
 
 
 def db(request):
