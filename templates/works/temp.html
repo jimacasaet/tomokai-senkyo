@@ -1,0 +1,42 @@
+{% extends 'works/default.html' %}
+{% load staticfiles %}
+{% block head_block %}
+<style type="text/css">
+    body{
+        padding-top: 50px;
+    }
+    .starter-template{
+        padding: 40px 15px;
+        text-align: center;
+    }
+    .chaika{
+        width: 10%;
+    }
+</style>
+{% endblock %}
+{% block body_block %}
+<div class="container">
+    <div class="starter-template">
+        <h1> {{text}} </h1>
+        <img src="{% static image %}" class="chaika" /> <br />
+        {% if about %}
+            {{about}}
+        {% endif %}
+        <div class="row">
+            {% if list %}
+                {% for l in list %}
+                <div class="col-sm-3">
+                    <h2><a href="/works/board/{{l.board.slug}}">{{l.board.title}}</a></h2>
+                    <div class="list-group">
+                    {% for a in l.activities %}
+                        <a href="#" class="list-group-item">{{a.title}} (Progress {{a.progress}}%)</a>
+                    {% endfor %}
+                    <a href="#" class="list-group-item"> Add more ... </a>
+                    </div>
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
