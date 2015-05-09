@@ -1,0 +1,19 @@
+<h2>Votes</h2>
+
+
+<form action="/receive/" method="post">
+{% csrf_token %}
+{% for position in positions %}
+        {{ position.name }}
+        <fieldset class="{{ position.name }}">
+        {% for candidate in position.candidates %}            
+            {{ candidate.name }}
+            <input type="radio" name="choice{{ position.name }}" id="choice{{candidate.id }}" value="{{ candidate.id }}" />
+            <br />
+        {% endfor %}
+        </fieldset>
+        <br />
+{% endfor %}
+<input type="submit" value="vote" />
+</form>
+</ul>
