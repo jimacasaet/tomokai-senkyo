@@ -1,0 +1,15 @@
+{% extends 'default.html' %}
+{% block body_block %}
+    <h2>Register</h2>
+
+    {% if registered %}
+    You've registered.
+    {% else %}
+    <form action="/register/" method="post">
+    {% csrf_token %}
+    {{ user_form.as_p }}
+    <input type="submit" value="Register" />
+    {% endif %}
+    </form>
+    </ul>
+{% endblock %}

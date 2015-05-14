@@ -1,5 +1,5 @@
 """
-Django settings for gettingstarted project.
+Django settings for djapp project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.6/topics/settings/
@@ -8,10 +8,11 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.6/ref/settings/
 """
 
+# enable production mode in the production server!
+PRODUCTION_MODE = True
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-import dj_database_url
-
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -23,9 +24,15 @@ DEFAULT_SECRET_KEY = '3iy-!-d$!pc_ll$#$elg&cpr@*tfn-d5&n9ag=)%#()t$$5%5^'
 SECRET_KEY = os.environ.get('SECRET_KEY', DEFAULT_SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if PRODUCTION_MODE:
+    DEBUG = False
+else:
+    DEBUG = True
 
-TEMPLATE_DEBUG = True
+if PRODUCTION_MODE:
+    TEMPLATE_DEBUG = False
+else:
+    TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -51,9 +58,10 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'gettingstarted.urls'
+ROOT_URLCONF = 'djapp.urls'
 
-WSGI_APPLICATION = 'gettingstarted.wsgi.application'
+if PRODUCTION_MODE:
+    WSGI_APPLICATION = 'djapp.wsgi.application'
 
 
 # Database
@@ -87,7 +95,8 @@ STATIC_URL = '/static/'
 
 
 # Parse database configuration from $DATABASE_URL
-DATABASES['default'] =  dj_database_url.config()
+if PRODUCTION_MODE:
+    DATABASES['default'] =  dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
@@ -103,3 +112,6 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+# redefined properties
+LOGIN_URL = '/login/'

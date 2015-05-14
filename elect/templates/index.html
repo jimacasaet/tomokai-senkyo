@@ -1,0 +1,8 @@
+{% extends 'logged_in.html' %}
+{% block login_block %}
+    {% if remove_message != "True" %}
+    <h1>Senkyo has begun!</h1>
+    Click in the vote button in the header to start voting. Remember that after voting, you can no longer change your votes. Please double-check if your vote has been registered.
+    {% endif %}
+    <h1>{{ extra_messages }}</h1>
+{% endblock %}

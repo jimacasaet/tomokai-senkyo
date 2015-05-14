@@ -1,8 +1,7 @@
 from django import forms
-from elect.models import Position, Candidate, Vote
-class VoteForm(forms.ModelForm):
-    candidate = forms.IntegerField(widget=
-    authstring = forms.CharField(max_length=128, help_text="Authenticate!")
+from django.contrib.auth.models import User
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
     class Meta:
-        model = Vote
-        fields = ('authstring','candidate')
+        model = User
+        fields = ('username','email','password')

@@ -1,0 +1,21 @@
+{% extends 'logged_in.html' %}
+{% block login_block %}
+{% if verified %}
+You have already voted.
+{% else %}
+<h1>Verification</h1>
+<form action="/vote1/" method="post">
+    {% csrf_token %}
+    {% if warn %}
+        <p class="bg-danger">Invalid password. Try again.</p>
+    {% else %}
+        <p class="bg-warning">We need your password to continue.</p>
+    {% endif %}
+    <div class="form-group">
+        <label for="">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password" />
+    </div>
+    <button type="submit" class="btn btn-default">Verify</button>
+</form>
+{% endif %}
+{% endblock %}

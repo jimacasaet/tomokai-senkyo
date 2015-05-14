@@ -1,0 +1,17 @@
+{% extends 'default.html' %}
+{% block add_css_block %}
+{% endblock %}
+{% block nav_block %}
+    <ul class="nav navbar-nav">
+        <li {% if page == "index" %} class="active" {% endif %}><a href="/">Home</a></li>
+        <li {% if page == "vote" %} class="active" {% endif %}><a href="/vote1">Vote</a></li>
+        <li {% if page == "change" %} class="active" {% endif %}><a href="/change">Change Password</a></li>
+    </ul>
+    <p class="navbar-text navbar-right"> Hello {{user.username}}. &nbsp; <a href="/logout">Logout</a></p>
+{% endblock %}
+{% block body_block %}
+{% if user.is_authenticated %}
+{% endif %}
+    {% block login_block %}
+    {% endblock %}
+{% endblock %}

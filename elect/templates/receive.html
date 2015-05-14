@@ -1,2 +1,11 @@
-<h2>Thank you!</h2>
-{{ result }}
+{% extends 'logged_in.html' %}
+{% block login_block %}
+{% if not_a_vote %}
+<h1>Password is changed</h1>
+<p class="bg-danger"> Change password module is not implemented yet! This doesn't actually work </p>
+Please use the new password from now on.
+{% else %}
+<h1>Thank you!</h1>
+Results will be available after the elections.
+{% endif %}
+{% endblock %}

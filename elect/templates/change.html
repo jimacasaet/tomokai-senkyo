@@ -1,0 +1,26 @@
+{% extends 'logged_in.html' %}
+{% block login_block %}
+<h1>Change Password</h1>
+<form action="/change/" method="post">
+    {% csrf_token %}
+    {% if wrong_pass %}
+    <p class="bg-danger">Invalid password. Try again.</p>
+    {% endif %}
+    <div class="form-group">
+        <label for="">Password</label>
+        <input type="password" class="form-control" name="password" placeholder="Password" />
+    </div>
+    {% if not_matching %}
+    <p class="bg-danger">Passwords do not match.</p>
+    {% endif %}
+    <div class="form-group">
+        <label for="">New Password</label>
+        <input type="password" class="form-control" name="new_password" placeholder="Password" />
+    </div>
+    <div class="form-group">
+        <label for="">Confirm Password</label>
+        <input type="password" class="form-control" name="confirm_new_password" placeholder="Password" />
+    </div>
+    <button type="submit" class="btn btn-default">Change Password</button>
+</form>
+{% endblock %}
