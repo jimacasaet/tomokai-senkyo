@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # enable production mode in the production server!
 PRODUCTION_MODE = True
+YES_IF_DEBUG_PRODUCTION = True
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
@@ -28,12 +29,12 @@ SECRET_KEY = os.environ.get('SECRET_KEY', DEFAULT_SECRET_KEY)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if PRODUCTION_MODE:
-    DEBUG = False
+    DEBUG = YES_IF_DEBUG_PRODUCTION
 else:
     DEBUG = True
 
 if PRODUCTION_MODE:
-    TEMPLATE_DEBUG = False
+    TEMPLATE_DEBUG = YES_IF_DEBUG_PRODUCTION
 else:
     TEMPLATE_DEBUG = True
 
