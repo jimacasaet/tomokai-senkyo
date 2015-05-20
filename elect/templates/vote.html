@@ -9,6 +9,9 @@ You already voted. You may not edit your votes.
 {% if warn %}
     <p class="bg-warning">You need to choose for all positions.</p> 
 {% endif %}
+{% if invalid_pass %}
+    <p class="bg-danger">Invalid password.</p> 
+{% endif %}
 {% for position in positions %}
     <div class="form-group">
         For <b>{{ position.name }}</b>
