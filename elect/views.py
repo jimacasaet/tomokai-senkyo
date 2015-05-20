@@ -165,7 +165,7 @@ def vote_step2(request):
             # otherwise register the vote (party party!)
             else:
                 for c in candidate_votes:
-                    authstring = make_password(c.name+" "+password, "tuba")
+                    authstring = make_password(str(c.id)+" "+password, "tuba")
                     Vote.objects.get_or_create(candidate=c, authstring=authstring)
                 VotedUser.objects.get_or_create(key=pass_hash)
                 del request.session['vote_hash']
@@ -178,7 +178,7 @@ def vote_step2(request):
     # when all other conditions fail, print the form.
     context['positions'] = []
     for p in positions:
-        candidates =  Candidate.objects.filter(position=p)
+        candidates =  Candidate.objects.filter(position=p).order_by('id')
         p_prime = {'name':p.name, 'candidates':candidates}
         context['positions'].append(p_prime)
     return render(request, 'vote.html', context)
