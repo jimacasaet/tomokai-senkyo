@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # enable production mode in the production server!
 PRODUCTION_MODE = True
-YES_IF_DEBUG_PRODUCTION = True
+YES_IF_DEBUG_PRODUCTION = False
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
