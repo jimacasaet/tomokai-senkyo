@@ -1,11 +1,16 @@
 {% extends 'logged_in.html' %}
 {% block login_block %}
-{% if not_a_vote %}
+{% if failed %}
+Your password has already been changed. You can only change your password once.
+{% else %} {% if already_voted %}
+You cannot change your password after voting.
+{% else %} {% if not_a_vote %}
 <h1>Password is changed</h1>
-<p class="bg-danger"> Change password module is not implemented yet! This doesn't actually work </p>
-Please use the new password from now on.
+You will now be logged out. Please use your new password from now on.
 {% else %}
 <h1>Thank you!</h1>
 Results will be available after the elections.
+{% endif %}
+{% endif %}
 {% endif %}
 {% endblock %}

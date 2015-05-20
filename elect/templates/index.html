@@ -2,7 +2,12 @@
 {% block login_block %}
     {% if remove_message != "True" %}
     <h1>Senkyo has begun!</h1>
-    Click in the vote button in the header to start voting. Remember that after voting, you can no longer change your votes. Please double-check if your vote has been registered.
+    <ul>
+        <li>You can change your password, but only once.</li>
+        <li>You can click in the "Vote" button to start voting.</li>
+        <li>You can no longer change your votes or your password after voting.</li>
+        <li>Please double-check if your vote has been registered.</li>
+    </ul>
     {% endif %}
     <h1>{{ extra_messages }}</h1>
 {% endblock %}

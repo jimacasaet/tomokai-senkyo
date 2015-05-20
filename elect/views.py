@@ -125,14 +125,33 @@ def vote_step2(request):
         context['positions'].append(p_prime)
     return render(request, 'vote.html', context)
 
+@login_required
 def change(request):
     context = {'page':'change'}
     if request.method == 'POST':
         password = request.POST.get('password')
         new_password = request.POST.get('new_password')
         confirm_new_password = request.POST.get('confirm_new_password')
-        if  new_password != confirm_new_password:
+        if not authenticate(username=request.user.username, password=password):
+            context['wrong_pass'] = True
+        elif new_password != confirm_new_password:
             context['not_matching'] = True
+        elif new_password == "":
+            context['empty'] = True
         else:
-            return render(request, 'receive.html', {'page':'receive', 'not_a_vote':True})
+            check_hash = make_password(password, salt="changedna")
+            vote_check_hash = make_password(password, salt="asin")
+            if len(VotedUser.objects.filter(key=vote_check_hash)) != 0:
+                return render(request, 'receive.html', {'page':'receive', 'already_voted':True})
+            if len(VotedUser.objects.filter(key=check_hash)) != 0:
+                return render(request, 'receive.html', {'page':'receive', 'failed':True})
+            else:
+                new_check_hash = make_password(new_password, salt="changedna")
+                VotedUser.objects.get_or_create(key=new_check_hash)
+                new_hash = make_password(new_password)
+                edited_user = request.user
+                edited_user.password = new_hash
+                edited_user.save()
+                logout(request)
+                return render(request, 'receive.html', {'page':'receive', 'not_a_vote':True})
     return render(request, 'change.html', context)

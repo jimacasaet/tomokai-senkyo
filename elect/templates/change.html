@@ -3,6 +3,7 @@
 <h1>Change Password</h1>
 <form action="/change/" method="post">
     {% csrf_token %}
+    <p class="bg-warning">You can only change your password once!</p>
     {% if wrong_pass %}
     <p class="bg-danger">Invalid password. Try again.</p>
     {% endif %}
@@ -12,6 +13,9 @@
     </div>
     {% if not_matching %}
     <p class="bg-danger">Passwords do not match.</p>
+    {% endif %}
+    {% if empty %}
+    <p class="bg-danger">You need to provide a password!</p>
     {% endif %}
     <div class="form-group">
         <label for="">New Password</label>
