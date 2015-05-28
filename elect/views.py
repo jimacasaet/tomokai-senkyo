@@ -14,41 +14,35 @@ import datetime
 def index(request):
     # check all application states (application states determine whether some messages and some urls are visible)
     try:
+        ie_state = AppState.objects.get(key="is_ended")
         em_state = AppState.objects.get(key="extra_messages")
-        lv_state = AppState.objects.get(key="listing_visible")
-        rm_state = AppState.objects.get(key="remove_message")
     except Exception:
         return HttpResponse("[Error 1] Improper app state.")
     
     # otherwise display the index page.
-    return render(request, 'index.html',{'page':'index', 'extra_messages':em_state.value, 'listing_visible':lv_state.value, 'remove_message':rm_state.value})
+    return render(request, 'index.html',{'page':'index', 'is_ended':ie_state.value, 'is_admin':request.user.is_staff, 'extra_messages':em_state.value})
 
 @login_required
-# lists the vote totals. This is only visible when app state "listing_visible" is "True"
-def listing(request):     
-    # if state does not exist, then do not display stuff!
-    try:
-        state = AppState.objects.get(key="listing_visible")
-    except Exception:
-        return HttpResponse("[Error 2] Improper app state.")
-    
-    # if state is not set to true, don't display stuff.
-    if state.value == "False":
-        return HttpResponse("[Error 3] Not available.")
+# lists the vote totals.
+def listing(request):
+    # no more checking of listing_visible because it's admin stuff anyway.
+    # check if user is actually admin!
+    if request.user.is_staff:
+        positions = Position.objects.all()
+        p_data = []
+        for p in positions:
+            candidates =  Candidate.objects.filter(position=p)
+            c_data = []
+            for c in candidates:
+                c_prime = {'name':c.name, 'votes':len(Vote.objects.filter(candidate=c))}
+                c_data.append(c_prime)
+            p_prime = {'name':p.name, 'candidates':c_data}
+            p_data.append(p_prime)
+        return render(request, 'listing.html', {'positions': p_data, 'page':'listing'})
+    # otherwise don't display stuff
+    else:
+        return HttpResponse("[Error 4] Not available.")
         
-    # otherwise display them
-    positions = Position.objects.all()
-    p_data = []
-    for p in positions:
-        candidates =  Candidate.objects.filter(position=p)
-        c_data = []
-        for c in candidates:
-            c_prime = {'name':c.name, 'votes':len(Vote.objects.filter(candidate=c))}
-            c_data.append(c_prime)
-        p_prime = {'name':p.name, 'candidates':c_data}
-        p_data.append(p_prime)
-    return render(request, 'listing.html', {'positions': p_data, 'page':'listing'})
-
 def site_login(request):
     context = {}
     
@@ -67,6 +61,7 @@ def site_login(request):
         # finally authenticate the person
         user = authenticate(username=username, password=password)
         if user:
+            # only log in if the user is active. makes things easy
             if user.is_active:
                 login(request,user)
                 return HttpResponseRedirect(redirecturl)
@@ -90,8 +85,25 @@ def site_logout(request):
     logout(request)
     return HttpResponseRedirect('/')
 
+# helper function for checking functionality
+def check_not_ended():
+    try:
+        ie_state = AppState.objects.get(key="is_ended")
+    except Exception:
+        return HttpResponse("[Error 1] Improper app state.")
+    # if is_ended is true, then redirect to home always
+    if ie_state.value == 'True':
+        return HttpResponseRedirect('/')
+    else:
+        return None
+
 @login_required
 def vote_step1(request):
+    # check if election has ended.
+    check = check_not_ended()
+    if check != None:
+        return check
+    
     # "page is vote" context is for the nav bar template
     context = {'page':'vote'}
     
@@ -116,7 +128,7 @@ def vote_step1(request):
                 request.session['vote_hash'] = pass_hash
                 return HttpResponseRedirect('/vote2')
         
-        # otherwise warn them
+        # otherwise warn them of non-authentication
         else:
             context['already_voted'] = False
             context['warn'] = True
@@ -128,6 +140,11 @@ def vote_step1(request):
     
 @login_required
 def vote_step2(request):
+    # check if election has ended.
+    check = check_not_ended()
+    if check:
+        return check
+        
     # "page is vote" context is for the nav bar template
     context = {'page':'vote'}
     
@@ -185,6 +202,11 @@ def vote_step2(request):
 
 @login_required
 def change(request):
+    # check if election has ended.
+    check = check_not_ended()
+    if check:
+        return check
+    
     # "page is change" context is for the nav bar template
     context = {'page':'change'}   
     

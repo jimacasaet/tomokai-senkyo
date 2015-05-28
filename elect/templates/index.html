@@ -1,13 +1,21 @@
 {% extends 'logged_in.html' %}
 {% block login_block %}
-    {% if remove_message != "True" %}
-    <h1>Senkyo has begun!</h1>
+    {% if is_ended != "True" %}
+    <h1>Special Elections has begun!</h1>
     <ul>
         <li>You can change your password, but only once.</li>
         <li>You can click in the "Vote" button to start voting.</li>
         <li>You can no longer change your votes or your password after voting.</li>
         <li>Please double-check if your vote has been registered.</li>
     </ul>
+    {% else %}
+    <h1>Special Elections has ended!</h1>
+    <ul>
+        <li>You may no longer vote.</li>
+    </ul>
     {% endif %}
-    <h1>{{ extra_messages }}</h1>
+    {% if is_admin %}
+        Admins, <a href="/listing/">this is the election tally</a>.  Access the admin interface through <a href="/admin/">here</a>. Do not disturb the hashes! 
+    {% endif %}
+    <h3> {{ extra_messages }} </h3>
 {% endblock %}
